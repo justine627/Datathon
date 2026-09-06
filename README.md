@@ -1,7 +1,6 @@
 # Beijing Multi-Site Air Quality — Next-Hour PM2.5 Prediction
 
-This notebook builds a leakage-safe pipeline to predict `PM2_5_next_hour` for the
-"Inter-Uni Datathon Stream 2 — Beijing Multi-Site Air Quality" Kaggle competition,
+This notebook demonstrates the culmination of our efforts to produce a leak-proof model in order to predict `PM2_5_next_hour` for the "Inter-Uni Datathon Stream 2 — Beijing Multi-Site Air Quality" Kaggle competition,
 using LightGBM and XGBoost with a chronological validation split and a weighted blend.
 
 ## Required Files
@@ -21,7 +20,7 @@ Files produced by the notebook (written to the working directory):
 
 The notebook has two loosely related parts that must each run top to bottom:
 
-1. **Cells 1–3 — Exploratory data analysis and a simpler feature pass**
+1. **Cells 1–3 — EDA and a simpler feature pass**
    - Cell 1: Load `train.csv`/`test(1).csv`, check duplicates/missingness, correlations, target distribution.
    - Cell 2: Impossible-value checks, cyclical hour/month encodings, categorical setup, log-transform check on the target.
    - Cell 3: Apply the same preprocessing to `test_df`, align `station`/`wd` categories, save `train_cleaned.csv` / `test_cleaned.csv`.
@@ -53,8 +52,6 @@ Run all cells sequentially; do not skip cells 1–3, as they define `df`/`test_d
 - `kagglehub` (imported but unused beyond the commented example)
 - Standard library: `os`, `time`
 
-Designed to run in the Kaggle `kaggle/python` Docker image (no internet access, no GPU required — `isGpuEnabled: false`, `isInternetEnabled: false` per notebook metadata).
-
 ## Important Random Seeds / Settings
 
 - `random_state=42` is set on every LightGBM (`LGBMRegressor`) and XGBoost (`XGBRegressor`) model instance, for both the hyperparameter search and final fits.
@@ -65,3 +62,6 @@ Designed to run in the Kaggle `kaggle/python` Docker image (no internet access, 
 - XGBoost fixed settings: `n_estimators=800`, `learning_rate=0.03`, `max_depth=6`, `early_stopping_rounds=50`.
 - Blend weight search: `w` swept from 0.0 to 1.0 in steps of 0.1 (LightGBM weight), choosing the `w` minimizing validation RMSE.
 - Final predictions are clipped to be non-negative (`np.clip(..., 0, None)`), and any unmatched submission rows are filled with the training target mean.
+
+## Notebook with final prediction
+The notebook with the final prediction is Final_Version.ipynb in this repository.
